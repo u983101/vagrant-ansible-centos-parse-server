@@ -53,6 +53,6 @@
         name: parse-dashboard
         global: yes
     - name: Start Parse server
-      shell: ("parse-server --appId APPLICATION_ID --masterKey MASTER_KEY --databaseURI mongodb://localhost/test >/dev/null 2>&1 &")
+      shell: "(parse-server --appId APPLICATION_ID --masterKey MASTER_KEY --databaseURI mongodb://localhost/test >/dev/null 2>&1 &)"
     - name: Start Parse dashboard
-      shell: ("parse-dashboard --dev --appId APPLICATION_ID --masterKey MASTER_KEY --serverURL 'http://localhost:1337/parse' --appName optionalName >/dev/null 2>&1 &")
+      shell: "(parse-dashboard --dev --appId APPLICATION_ID --masterKey MASTER_KEY --serverURL 'http://localhost:1337/parse' --appName optionalName >/dev/null 2>&1 &)"
