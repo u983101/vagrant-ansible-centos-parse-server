@@ -1,0 +1,58 @@
+---
+- name: "Install Parse Platform"
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: "Create Mongo Repo"
+      become: yes
+      copy:
+        dest: "/etc/yum.repos.d/mongodb-org-4.2.repo"
+        content: |
+          [mongodb-org-4.2]
+          name=MongoDB Repository
+          baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.2/x86_64/
+          gpgcheck=1
+          enabled=1
+          gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
+    - name: "Install mongo"
+      become: yes
+      yum:
+        name: mongodb-org
+        state: present
+    - name: "Make sure mongodb is up"
+      become: yes
+      systemd:
+        name: mongod
+        state: started
+    - name: load node script
+      become: yes
+      shell: curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -
+    - name: Install node
+      become: yes
+      yum:
+        name: nodejs
+        state: present
+    # - name: Install npm
+    #   become: yes
+    #   yum:
+    #     name: npm
+    #     state: present
+    - name: install git
+      become: yes
+      yum:
+        name: git
+        state: present
+    - name: Install parse server
+      become: yes
+      npm:
+        name: parse-server
+        global: yes
+    - name: Install parse dashboard
+      become: yes
+      npm:
+        name: parse-dashboard
+        global: yes
+    - name: Start Parse server
+      shell: ("parse-server --appId APPLICATION_ID --masterKey MASTER_KEY --databaseURI mongodb://localhost/test >/dev/null 2>&1 &")
+    - name: Start Parse dashboard
+      shell: ("parse-dashboard --dev --appId APPLICATION_ID --masterKey MASTER_KEY --serverURL 'http://localhost:1337/parse' --appName optionalName >/dev/null 2>&1 &")
